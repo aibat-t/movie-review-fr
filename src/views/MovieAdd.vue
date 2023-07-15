@@ -144,25 +144,29 @@ const form = useForm({
 let image = ref("");
 
 async function submit() {
-  const responseDetails = await axios.post("/api/v1/movie", formed(form));
+  try {
+    const responseDetails = await axios.post("/api/v1/movie", formed(form));
 
-  //TODO не видит форму
-  const id = responseDetails.data?.id || 0;
-  const formData = new FormData();
-  if (id) {
-    formData.append("image", image);
-    formData.append("id", id);
-  }
-  console.log(formData);
+    //TODO не видит форму
+    const id = responseDetails.data?.id || 0;
+    const formData = new FormData();
+    if (id) {
+      formData.append("image", image);
+      formData.append("id", id);
+    }
+    console.log(formData);
 
-  const responseImage = await axios.post("/api/v1/poster", formed(formData), {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+    const responseImage = await axios.post("/api/v1/poster", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-  if (responseDetails.status === 200 && responseImage.status == 200) {
-    router.push({ name: "home" });
+    if (responseDetails.status === 200 && responseImage.status == 200) {
+      router.push({ name: "home" });
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 

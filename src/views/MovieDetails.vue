@@ -51,7 +51,7 @@ function formatDate(strDate) {
   let month = objectDate.getMonth();
   let year = objectDate.getFullYear();
 
-  return `${month}/${day}/${year}`;
+  return `${day}/${month}/${year}`;
 }
 
 onMounted(() => {

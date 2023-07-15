@@ -52,15 +52,25 @@ const userStore = {
       }
     },
     async fetchUserDetails({ state, commit }) {
-      if (state.auth) {
-        const response = await axios.get("/api/v1/user");
+      try {
+        if (state.auth) {
+          const response = await axios.get("/api/v1/user");
 
-        if (response.data) {
-          commit(USER, response.data);
+          if (response.data) {
+            commit(USER, response.data);
+          }
+        } else {
+          commit(USER, {});
         }
-      } else {
-        commit(USER, {});
+      } catch (error) {
+        console.log(error);
       }
+    },
+    clearUserAuth({ commit }) {
+      commit(AUTH, false);
+      commit(TOKEN, "");
+      commit(USER, {});
+      localStorage.removeItem("token");
     },
   },
 };

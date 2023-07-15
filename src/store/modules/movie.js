@@ -77,11 +77,14 @@ const movieStore = {
       }
     },
     async fetchMovieById({ commit }, id) {
-      const res = await axios.get(`/api/v1/movie/${id}`);
+      try {
+        const res = await axios.get(`/api/v1/movie/${id}`);
+        const resData = res.data;
 
-      const resData = res.data;
-
-      commit(MOVIE_DETAIL, resData);
+        commit(MOVIE_DETAIL, resData);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

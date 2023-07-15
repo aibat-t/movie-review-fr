@@ -12,6 +12,9 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     path: "/movies/:page?",
@@ -41,11 +44,17 @@ const routes = [
     path: "/login",
     name: "login",
     component: LoginView,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     path: "/register",
     name: "register",
     component: RegisterView,
+    meta: {
+      requiresAuth: false,
+    },
   },
   { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
@@ -59,6 +68,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!store.getters["user/auth"]) {
       next({ name: "login" });
+      return;
     }
   }
   next();

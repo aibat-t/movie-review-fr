@@ -24,19 +24,15 @@ const authInterceptor = (request) => {
 };
 
 const errorInterceptor = (error) => {
-  switch (error.response.status) {
-    case 400:
-      console.log(error.response.status, error.message);
-      break;
-
-    case 401:
-      console.log(error.response.status, error.message);
-      localStorage.removeItem("token");
-      router.push({ name: "login" });
-      break;
+  if (
+    error.response.status === 401 &&
+    router.currentRoute.value.meta.requiresAuth === true
+  ) {
+    store.dispatch("user/clearUserAuth");
+    router.push({ name: "login" });
   }
 
-  return Promise.reject(error);
+  //return Promise.reject(error);
 };
 
 const getResponse = (response) => {
