@@ -1,25 +1,21 @@
 <template>
   <div class="d-flex flex-row-reverse">
-    <router-link to="\" class="btn btn btn-outline-light me-2 text-bg-dark"
-      >Delete</router-link
-    >
-    <router-link to="\" class="btn btn btn-outline-light me-2 text-bg-dark"
-      >Edit</router-link
-    >
+    <button @click="onDeleteHandler" class="btn me-2 text-bg-dark">
+      Delete
+    </button>
+    <router-link to="/" class="btn me-2 text-bg-dark">Edit</router-link>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { defineProps, defineEmits } from "vue";
 
-<style scoped>
-.btn-delete {
-  background-color: #ff7276;
-  color: black;
-  border-color: black;
+const props = defineProps(["movieId"]);
+const emits = defineEmits(["movieToDelete"]);
+
+function onDeleteHandler() {
+  emits("movieToDelete", props.movieId);
 }
-.btn-edit {
-  background-color: #ffffe0;
-  color: black;
-  border-color: black;
-}
-</style>
+</script>
+
+<style scoped></style>

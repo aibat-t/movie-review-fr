@@ -86,6 +86,15 @@ const movieStore = {
         console.log(error);
       }
     },
+    async deleteMovie({ commit }, id) {
+      try {
+        const resposne = await axios.delete(`/api/v1/movie/${id}`);
+        console.log(resposne);
+        commit(MOVIE_DETAIL, {});
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 

@@ -2,7 +2,7 @@
   <div class="container mt-4">
     <div class="d-flex mb-4 justify-content-between">
       <BreadCrumbs :movieName="movie.name" />
-      <MovieControlButtons />
+      <MovieControlButtons :movieId="movie.id" @movieToDelete="onDelete" />
     </div>
     <div class="row px-2">
       <div class="col-4 poster-img">
@@ -25,7 +25,7 @@
 
 <script setup>
 import { computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import no_poster_img from "../assets/no-poster-img.png";
 import MovieControlButtons from "@/components/movie/MovieControlButtons.vue";
@@ -34,6 +34,7 @@ import BreadCrumbs from "@/components/BreadCrumbs.vue";
 const url = process.env.VUE_APP_API_KEY;
 
 const route = useRoute();
+const router = useRouter();
 const store = useStore();
 const movie = computed(() => store.getters["movie/currentMovie"]);
 const posterUrl = computed(() => {
@@ -57,6 +58,11 @@ function formatDate(strDate) {
 onMounted(() => {
   store.dispatch("movie/fetchMovieById", route.params.id);
 });
+
+function onDelete(id) {
+  store.dispatch("movie/deleteMovie", id);
+  router.push({ name: "movies" });
+}
 </script>
 
 <style scoped>

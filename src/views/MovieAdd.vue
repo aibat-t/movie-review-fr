@@ -2,9 +2,15 @@
   <div class="container mt-4">
     <form @submit.prevent="submit" enctype="multipart/form-data">
       <div class="row px-2">
-        <div class="col-4 poster-img">
+        <div class="col-4 poster-img d-flex flex-column">
+          <img
+            :src="preview"
+            alt="downloaded file"
+            class="img-fluid shadow"
+            :class="{ hide: hide }"
+          />
           <label for="file-upload" class="custom-file-upload">
-            Custom Upload
+            Upload
             <input
               type="file"
               class="movie-poster-upload"
@@ -26,6 +32,7 @@
                 class="form-control"
                 id="movie-name"
                 placeholder="Enter movie name"
+                required
                 @blur="form.name.blur"
               />
               <small
@@ -48,6 +55,7 @@
                 class="form-control"
                 id="movie-date"
                 placeholder="Enter movie release date"
+                required
                 @blur="form.release_date.blur"
               />
               <small
@@ -73,6 +81,7 @@
                 id="movie-director"
                 placeholder="Enter movie director"
                 @blur="form.director.blur"
+                required
               />
               <small
                 v-if="form.director.errors.required && form.director.touched"
@@ -92,9 +101,10 @@
                 v-model="form.synopsis.value"
                 class="form-control"
                 id="movie-synopsis"
-                cols="10"
+                rows="5"
                 placeholder="What is the movie about"
                 @blur="form.synopsis.blur"
+                required
               ></textarea>
               <small
                 v-if="form.synopsis.errors.required && form.synopsis.touched"
@@ -116,7 +126,7 @@
 import { useForm } from "@/use/form";
 import axios from "@/plugins/axios";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
 const required = (val) => !!val;
 
@@ -141,29 +151,30 @@ const form = useForm({
   },
 });
 
-let image = ref("");
+let image = reactive({});
+const preview = ref("");
+const hide = ref(true);
 
 async function submit() {
   try {
     const responseDetails = await axios.post("/api/v1/movie", formed(form));
-
-    //TODO не видит форму
     const id = responseDetails.data?.id || 0;
     const formData = new FormData();
+
     if (id) {
-      formData.append("image", image);
       formData.append("id", id);
+      if (image.name) {
+        formData.append("image", image);
+        await axios.post("/api/v1/poster", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
     }
-    console.log(formData);
 
-    const responseImage = await axios.post("/api/v1/poster", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    if (responseDetails.status === 200 && responseImage.status == 200) {
-      router.push({ name: "home" });
+    if (responseDetails.status === 200) {
+      router.push({ name: "movies" });
     }
   } catch (error) {
     console.log(error);
@@ -171,17 +182,17 @@ async function submit() {
 }
 
 function handleImageUpload(event) {
-  console.log("file up");
-  image = event.files[0];
+  hide.value = true;
+  if (event.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      preview.value = e.target.result;
+    };
+    image = event.files[0];
+    reader.readAsDataURL(event.files[0]);
+    hide.value = false;
+  }
 }
-
-// generateURL(file) {
-//     let fileSrc = URL.createObjectURL(file);
-//     setTimeout(() => {
-//         URL.revokeObjectURL(fileSrc);
-//     }, 1000);
-//     return fileSrc;
-// },
 
 function formed(form = {}) {
   return Object.entries(form)
@@ -208,5 +219,8 @@ input[type="file"] {
   display: inline-block;
   padding: 6px 12px;
   cursor: pointer;
+}
+.hide {
+  display: none;
 }
 </style>
