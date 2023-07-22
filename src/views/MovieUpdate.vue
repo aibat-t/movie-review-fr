@@ -125,28 +125,33 @@
 <script setup>
 import { useForm } from "@/use/form";
 import axios from "@/plugins/axios";
-import { useRouter } from "vue-router";
-import { reactive, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { reactive, ref, computed, onMounted } from "vue";
 
 const required = (val) => !!val;
 
 const router = useRouter();
+const store = useStore();
+const route = useRoute();
+
+const movie = computed(() => store.getters["movie/currentMovie"]);
 
 const form = useForm({
   name: {
-    value: "",
+    value: movie.value.name,
     validators: { required },
   },
   release_date: {
-    value: "",
+    value: movie.value.release_date,
     validators: { required },
   },
   director: {
-    value: "",
+    value: movie.value.director,
     validators: { required },
   },
   synopsis: {
-    value: "",
+    value: movie.value.synopsis,
     validators: { required },
   },
 });
@@ -157,7 +162,7 @@ const hide = ref(true);
 
 async function submit() {
   try {
-    const responseDetails = await axios.post("/api/v1/movie", formed(form));
+    const responseDetails = await axios.put("/api/v1/movie", formed(form));
     const id = responseDetails.data?.id || 0;
     const formData = new FormData();
 
@@ -174,7 +179,7 @@ async function submit() {
     }
 
     if (responseDetails.status === 200) {
-      router.push({ name: "movies" });
+      router.push({ name: "movie", params: { id: id } });
     }
   } catch (error) {
     console.log(error);
@@ -202,6 +207,10 @@ function formed(form = {}) {
       return acc;
     }, {});
 }
+
+onMounted(() => {
+  store.dispatch("movie/fetchMovieById", route.params.id);
+});
 </script>
 
 <style scoped>

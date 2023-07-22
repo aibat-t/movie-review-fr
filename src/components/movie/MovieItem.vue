@@ -1,5 +1,5 @@
 <template>
-  <div class="card text-bg-color" style="width: 15rem">
+  <div class="card text-bg-color">
     <router-link :to="{ name: 'movieDetails', params: { id: movie.id } }">
       <img :src="posterUrl" class="card-img-top" :alt="movie.name" />
     </router-link>
@@ -56,10 +56,12 @@ export default {
   margin-top: 1rem;
 }
 .card-title {
-  text-align: left;
+  text-align: center;
+  font-weight: bolder;
 }
 .card-img-top {
   height: 350px;
+  width: auto;
   border-radius: 0;
   box-shadow: 3px 3px 10px #212529;
 }

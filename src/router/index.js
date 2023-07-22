@@ -5,6 +5,7 @@ import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import MovieDetails from "@/views/MovieDetails.vue";
 import MovieAdd from "@/views/MovieAdd.vue";
+import MovieUpdate from "@/views/MovieUpdate.vue";
 import store from "@/store/index";
 
 const routes = [
@@ -36,6 +37,14 @@ const routes = [
     path: "/movie/add",
     name: "movieAdd",
     component: MovieAdd,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/movie/update/:id",
+    name: "movieUpdate",
+    component: MovieUpdate,
     meta: {
       requiresAuth: true,
     },

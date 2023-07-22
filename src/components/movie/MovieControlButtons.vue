@@ -3,7 +3,9 @@
     <button @click="onDeleteHandler" class="btn me-2 text-bg-dark">
       Delete
     </button>
-    <router-link to="/" class="btn me-2 text-bg-dark">Edit</router-link>
+    <router-link :to="{ name: 'movieUpdate' }" class="btn me-2 text-bg-dark"
+      >Edit</router-link
+    >
   </div>
 </template>
 
