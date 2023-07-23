@@ -4,7 +4,7 @@
       <div class="row px-2">
         <div class="col-4 poster-img d-flex flex-column">
           <img
-            :src="preview"
+            :src="preview || posterUrl"
             alt="downloaded file"
             class="img-fluid shadow"
             :class="{ hide: hide }"
@@ -128,22 +128,33 @@ import axios from "@/plugins/axios";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { reactive, ref, computed, onMounted } from "vue";
+import no_poster_img from "../assets/no-poster-img.png";
 
 const required = (val) => !!val;
+const url = process.env.VUE_APP_API_KEY;
 
 const router = useRouter();
 const store = useStore();
 const route = useRoute();
 
 const movie = computed(() => store.getters["movie/currentMovie"]);
+const posterUrl = computed(() => {
+  if (movie.value.poster_name) {
+    return `${url}/api/v1/poster/${movie.value?.poster_name}`;
+  }
+  return no_poster_img;
+});
 
 const form = useForm({
+  id: {
+    value: movie.value.id,
+  },
   name: {
     value: movie.value.name,
     validators: { required },
   },
   release_date: {
-    value: movie.value.release_date,
+    value: dateToYYYYMMDD(movie.value.release_date),
     validators: { required },
   },
   director: {
@@ -179,7 +190,7 @@ async function submit() {
     }
 
     if (responseDetails.status === 200) {
-      router.push({ name: "movie", params: { id: id } });
+      router.push({ name: "movieDetails", params: { id: id } });
     }
   } catch (error) {
     console.log(error);
@@ -208,6 +219,22 @@ function formed(form = {}) {
     }, {});
 }
 
+function dateToYYYYMMDD(d) {
+  const date = new Date(d);
+  if (isValidDate(date)) {
+    return (
+      d &&
+      new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
+        .toISOString()
+        .split("T")[0]
+    );
+  }
+}
+
+function isValidDate(d) {
+  return d instanceof Date && !isNaN(d);
+}
+
 onMounted(() => {
   store.dispatch("movie/fetchMovieById", route.params.id);
 });
@@ -228,8 +255,5 @@ input[type="file"] {
   display: inline-block;
   padding: 6px 12px;
   cursor: pointer;
-}
-.hide {
-  display: none;
 }
 </style>
