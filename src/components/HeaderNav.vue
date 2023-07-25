@@ -66,7 +66,7 @@ export default {
     initLogout() {
       this.logout();
 
-      router.push("/");
+      router.push("/login");
     },
   },
 };
