@@ -1,9 +1,14 @@
 <template>
   <div class="container mt-4">
-    <div class="d-flex mb-4 justify-content-between">
-      <BreadCrumbs :movieName="movie.name" />
-      <MovieControlButtons :movieId="movie.id" @movieToDelete="onDelete" />
+    <div class="row">
+      <div class="col">
+        <div class="d-flex mb-4 justify-content-between">
+          <BreadCrumbs :movieName="movie.name" />
+          <MovieControlButtons :movieId="movie.id" @movieToDelete="onDelete" />
+        </div>
+      </div>
     </div>
+
     <div class="row px-2">
       <div class="col-4 poster-img">
         <img :src="posterUrl" :alt="movie.name" class="img-fluid shadow" />

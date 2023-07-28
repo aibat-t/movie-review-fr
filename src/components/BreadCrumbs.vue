@@ -9,18 +9,24 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
 import { computed, defineProps } from "vue";
+import { useStore } from "vuex";
 
 const props = defineProps({
   movieName: String,
 });
 
-const router = useRouter();
+const store = useStore();
 
 const previousPage = computed(() => {
-  const lastPath = router.options.history.state.back;
-  return lastPath ? lastPath : "/";
+  //const lastPath = router.options.history.state.back;
+  const currentPage = store.getters["movie/currentPage"];
+  return {
+    name: "movies",
+    params: {
+      page: currentPage,
+    },
+  };
 });
 </script>
 
