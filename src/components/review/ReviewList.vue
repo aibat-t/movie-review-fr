@@ -19,11 +19,27 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted } from "vue";
+import axios from "@/plugins/axios";
+
+const props = defineProps({
+  movieId: Number,
+});
+
+onMounted(() => {
+  fetchReviewByMovieId(props.movieId);
+});
+
+//TODO write review get functionality
+function fetchReviewByMovieId(id) {
+  axios.get(``);
+}
+</script>
 
 <style scoped>
 .review-wrapper {
-  margin-bottom: 50px;
+  margin-bottom: 85px;
 }
 .review-item {
   padding: 15px;
