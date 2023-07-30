@@ -36,5 +36,6 @@ const previousPage = computed(() => {
 }
 .btn-bc {
   border: none;
+  padding-left: 8px;
 }
 </style>

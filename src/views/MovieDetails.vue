@@ -1,15 +1,15 @@
 <template>
-  <div class="container mt-4">
+  <div class="container mt-3">
     <div class="row">
       <div class="col">
-        <div class="d-flex mb-4 justify-content-between">
+        <div class="d-flex mb-3 justify-content-between">
           <BreadCrumbs :movieName="movie.name" />
           <MovieControlButtons :movieId="movie.id" @movieToDelete="onDelete" />
         </div>
       </div>
     </div>
 
-    <div class="row px-2">
+    <div class="row">
       <div class="col-4 poster-img">
         <img :src="posterUrl" :alt="movie.name" class="img-fluid shadow" />
       </div>
@@ -25,6 +25,13 @@
         </div>
       </div>
     </div>
+
+    <div class="row mt-3">
+      <div class="col-7">
+        <ReviewList />
+      </div>
+      <div class="col-5"></div>
+    </div>
   </div>
 </template>
 
@@ -35,6 +42,7 @@ import { useStore } from "vuex";
 import no_poster_img from "../assets/no-poster-img.png";
 import MovieControlButtons from "@/components/movie/MovieControlButtons.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import ReviewList from "@/components/review/ReviewList.vue";
 
 const url = process.env.VUE_APP_API_KEY;
 
