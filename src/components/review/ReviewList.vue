@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, defineProps } from "vue";
 import axios from "@/plugins/axios";
 
 const props = defineProps({
@@ -33,6 +33,7 @@ onMounted(() => {
 
 //TODO write review get functionality
 function fetchReviewByMovieId(id) {
+  console.log(id);
   axios.get(``);
 }
 </script>
